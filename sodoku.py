@@ -34,12 +34,16 @@ def print_board(board):
     for r in range(len(board)):
         print(board[r])
 
-# Recursive function used to fill the sudoku board with valid
+# Recursive function used to fill the sudoku board with valid numbers
 def fill(board, pos=0):
     if pos == SIZE * SIZE:          # past the last cell: board is complete
         return True
 
     r, c = divmod(pos, SIZE)        # cell number -> (row, column)
+    
+    if board[r][c] != 0:            # test if position has been filled, moves ahead if it has
+        fill(board, pos + 1)
+        return True
 
     digits = list(range(1, SIZE + 1))
     random.shuffle(digits)
