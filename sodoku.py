@@ -61,11 +61,37 @@ def fill(board, pos=0):
 
     return False                    # nothing fit: tell the previous cell to change
 
+# Counts possible solutions to a given board. Used to make sure the puzzle is "well formed" (Has a unique solution)
+def count_solutions(board, pos = 0):
+    
+    if pos == SIZE * SIZE:          # returns number of solutions once every cell is checked
+            return 1
+
+    r, c = divmod(pos, SIZE)        # cell number -> (row, column)
+
+    if board[r][c] != 0:            # test if position has been filled, moves ahead if it has
+            return count_solutions(board, pos + 1)
+    
+    count = 0
+
+    for d in range(1, SIZE -1):
+            if is_valid(board, r, c, d):
+                board[r][c] = d         # try it
+    
+                count += count_solutions(board, pos + 1)
+                board[r][c] = 0
+                if count >= 2:
+                     break
+    
+    return count
+
 
 def main():
     board = [[0] * SIZE for _ in range(SIZE)]
     fill(board)
+    board[0][0] = 0
     print_board(board)
+    print(count_solutions(board))
 
 
 if __name__ == "__main__":
